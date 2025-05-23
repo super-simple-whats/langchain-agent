@@ -13,21 +13,11 @@ def SendWhatsapp(
 
     # Python equivalent of the PHP WhatsApp API call
     import requests
-    import json
 
     # These would need to be properly defined elsewhere or passed as parameters
     endpoint_url = "https://app.supersimplewhats.com/v1"
     device_name = os.environ.get("DEVICE_NAME")
     api_key = os.environ.get("SSW_API_KEY")
-    
-    payload = {
-        "device_key": device_name,
-        "message": message,
-        "recipient": recipient
-    }
-    
-    # Convert to JSON string
-    payload_str = json.dumps(payload)
     
     # Set headers
     headers = {
@@ -35,12 +25,11 @@ def SendWhatsapp(
         "Authorization": api_key
     }
     
-    # Make the POST request (equivalent to PHP's curl)
     try:
         response = requests.post(
-            f"{endpoint_url}/messages/send",
+            f"{endpoint_url}/messages/send/"+device_name+"/"+recipient,
             headers=headers,
-            data=payload_str
+            data=message
         )
         response.raise_for_status()  # Raise exception for 4XX/5XX responses
         return response.json()  # Assuming the API returns JSON
